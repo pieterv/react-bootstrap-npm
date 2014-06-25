@@ -1,27 +1,34 @@
 "use strict";
+var React = require("./react-es6")["default"];
 var ReactTransitionEvents = require("./react-es6/lib/ReactTransitionEvents")["default"];
 
 var CollapsableMixin = {
 
-  getInitialState: function() {
+  propTypes: {
+    collapsable: React.PropTypes.bool,
+    defaultExpanded: React.PropTypes.bool,
+    expanded: React.PropTypes.bool
+  },
+
+  getInitialState: function () {
     return {
-      isOpen: this.props.defaultOpen != null ? this.props.defaultOpen : null,
-      isCollapsing: false
+      expanded: this.props.defaultExpanded != null ? this.props.defaultExpanded : null,
+      collapsing: false
     };
   },
 
   handleTransitionEnd: function () {
     this._collapseEnd = true;
     this.setState({
-      isCollapsing: false
+      collapsing: false
     });
   },
 
   componentWillReceiveProps: function (newProps) {
-    if (this.props.isCollapsable && newProps.isOpen !== this.props.isOpen) {
+    if (this.props.collapsable && newProps.expanded !== this.props.expanded) {
       this._collapseEnd = false;
       this.setState({
-        isCollapsing: true
+        collapsing: true
       });
     }
   },
@@ -62,7 +69,7 @@ var CollapsableMixin = {
     var node = this.getCollapsableDOMNode();
 
     this._removeEndTransitionListener();
-    if (node && nextProps.isOpen !== this.props.isOpen && this.props.isOpen) {
+    if (node && nextProps.expanded !== this.props.expanded && this.props.expanded) {
       node.style[dimension] = this.getCollapsableDimensionValue() + 'px';
     }
   },
@@ -72,7 +79,7 @@ var CollapsableMixin = {
   },
 
   _afterRender: function () {
-    if (!this.props.isCollapsable) {
+    if (!this.props.collapsable) {
       return;
     }
 
@@ -86,13 +93,14 @@ var CollapsableMixin = {
     var node = this.getCollapsableDOMNode();
 
     if (node) {
-      node.style[dimension] = this.isOpen() ?
+      node.style[dimension] = this.isExpanded() ?
         this.getCollapsableDimensionValue() + 'px' : '0px';
     }
   },
 
-  isOpen: function () {
-    return (this.props.isOpen != null) ? this.props.isOpen : this.state.isOpen;
+  isExpanded: function () {
+    return (this.props.expanded != null) ?
+      this.props.expanded : this.state.expanded;
   },
 
   getCollapsableClassSet: function (className) {
@@ -106,9 +114,9 @@ var CollapsableMixin = {
       });
     }
 
-    classes.collapsing = this.state.isCollapsing;
-    classes.collapse = !this.state.isCollapsing;
-    classes['in'] = this.isOpen() && !this.state.isCollapsing;
+    classes.collapsing = this.state.collapsing;
+    classes.collapse = !this.state.collapsing;
+    classes['in'] = this.isExpanded() && !this.state.collapsing;
 
     return classes;
   }
