@@ -2,17 +2,14 @@
 
 var React = require('react');
 var classSet = require('react/lib/cx');
-var BootstrapMixin = require('./BootstrapMixin');
 
-var NavItem = React.createClass({displayName: 'NavItem',
-  mixins: [BootstrapMixin],
+var PageItem = React.createClass({displayName: 'PageItem',
 
   propTypes: {
-    onSelect: React.PropTypes.func,
-    active: React.PropTypes.bool,
     disabled: React.PropTypes.bool,
-    href: React.PropTypes.string,
-    title: React.PropTypes.string
+    previous: React.PropTypes.bool,
+    next: React.PropTypes.bool,
+    onSelect: React.PropTypes.func
   },
 
   getDefaultProps: function () {
@@ -23,16 +20,18 @@ var NavItem = React.createClass({displayName: 'NavItem',
 
   render: function () {
     var classes = {
-      'active': this.props.active,
-      'disabled': this.props.disabled
+      'disabled': this.props.disabled,
+      'previous': this.props.previous,
+      'next': this.props.next
     };
 
     return this.transferPropsTo(
-      React.DOM.li( {className:classSet(classes)}, 
+      React.DOM.li(
+        {className:classSet(classes)}, 
         React.DOM.a(
           {href:this.props.href,
           title:this.props.title,
-          onClick:this.handleClick,
+          onClick:this.handleSelect,
           ref:"anchor"}, 
           this.props.children
         )
@@ -40,15 +39,15 @@ var NavItem = React.createClass({displayName: 'NavItem',
     );
   },
 
-  handleClick: function (e) {
+  handleSelect: function (e) {
     if (this.props.onSelect) {
       e.preventDefault();
 
       if (!this.props.disabled) {
-        this.props.onSelect(this.props.key,this.props.href);
+        this.props.onSelect(this.props.key, this.props.href);
       }
     }
   }
 });
 
-module.exports = NavItem;
+module.exports = PageItem;
