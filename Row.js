@@ -1,12 +1,12 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var PropTypes = require('./PropTypes');
+var CustomPropTypes = require('./utils/CustomPropTypes');
 
 
 var Row = React.createClass({displayName: 'Row',
   propTypes: {
-    componentClass: PropTypes.componentClass
+    componentClass: CustomPropTypes.componentClass.isRequired
   },
 
   getDefaultProps: function () {

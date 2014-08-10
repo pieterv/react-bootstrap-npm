@@ -1,10 +1,10 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var classSet = require('react/lib/cx');
+var classSet = require('./utils/classSet');
+var cloneWithProps = require('./utils/cloneWithProps');
 var BootstrapMixin = require('./BootstrapMixin');
-var utils = require('./utils');
-var ValidComponentChildren = require('./ValidComponentChildren');
+var ValidComponentChildren = require('./utils/ValidComponentChildren');
 
 var Carousel = React.createClass({displayName: 'Carousel',
   mixins: [BootstrapMixin],
@@ -244,7 +244,7 @@ var Carousel = React.createClass({displayName: 'Carousel',
     var isPreviousActive = this.state.previousActiveIndex != null &&
             this.state.previousActiveIndex === index && this.props.slide;
 
-    return utils.cloneWithProps(
+    return cloneWithProps(
         child,
         {
           active: isActive,

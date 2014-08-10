@@ -1,8 +1,8 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var classSet = require('react/lib/cx');
-var PropTypes = require('./PropTypes');
+var classSet = require('./utils/classSet');
+var CustomPropTypes = require('./utils/CustomPropTypes');
 var constants = require('./constants');
 
 
@@ -24,7 +24,7 @@ var Col = React.createClass({displayName: 'Col',
     smPull: React.PropTypes.number,
     mdPull: React.PropTypes.number,
     lgPull: React.PropTypes.number,
-    componentClass: PropTypes.componentClass
+    componentClass: CustomPropTypes.componentClass.isRequired
   },
 
   getDefaultProps: function () {

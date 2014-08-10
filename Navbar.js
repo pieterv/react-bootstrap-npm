@@ -1,12 +1,13 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var classSet = require('react/lib/cx');
 var BootstrapMixin = require('./BootstrapMixin');
-var PropTypes = require('./PropTypes');
-var utils = require('./utils');
+var CustomPropTypes = require('./utils/CustomPropTypes');
+var classSet = require('./utils/classSet');
+var cloneWithProps = require('./utils/cloneWithProps');
+var ValidComponentChildren = require('./utils/ValidComponentChildren');
+var createChainedFunction = require('./utils/createChainedFunction');
 var Nav = require('./Nav');
-var ValidComponentChildren = require('./ValidComponentChildren');
 
 
 var Navbar = React.createClass({displayName: 'Navbar',
@@ -19,7 +20,7 @@ var Navbar = React.createClass({displayName: 'Navbar',
     inverse: React.PropTypes.bool,
     fluid: React.PropTypes.bool,
     role: React.PropTypes.string,
-    componentClass: PropTypes.componentClass,
+    componentClass: CustomPropTypes.componentClass.isRequired,
     brand: React.PropTypes.renderable,
     toggleButton: React.PropTypes.renderable,
     onToggle: React.PropTypes.func,
@@ -83,7 +84,7 @@ var Navbar = React.createClass({displayName: 'Navbar',
   },
 
   renderChild: function (child) {
-    return utils.cloneWithProps(child, {
+    return cloneWithProps(child, {
       navbar: true,
       collapsable: this.props.toggleNavKey != null && this.props.toggleNavKey === child.props.key,
       expanded: this.props.toggleNavKey != null && this.props.toggleNavKey === child.props.key && this.isNavOpen(),
@@ -97,7 +98,7 @@ var Navbar = React.createClass({displayName: 'Navbar',
 
     if (this.props.brand) {
       brand = React.isValidComponent(this.props.brand) ?
-        utils.cloneWithProps(this.props.brand, {
+        cloneWithProps(this.props.brand, {
           className: 'navbar-brand'
         }) : React.DOM.span( {className:"navbar-brand"}, this.props.brand);
     }
@@ -114,9 +115,9 @@ var Navbar = React.createClass({displayName: 'Navbar',
     var children;
 
     if (React.isValidComponent(this.props.toggleButton)) {
-      return utils.cloneWithProps(this.props.toggleButton, {
+      return cloneWithProps(this.props.toggleButton, {
         className: 'navbar-toggle',
-        onClick: utils.createChainedFunction(this.handleToggle, this.props.toggleButton.props.onClick)
+        onClick: createChainedFunction(this.handleToggle, this.props.toggleButton.props.onClick)
       });
     }
 

@@ -1,20 +1,29 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var classSet = require('react/lib/cx');
+var classSet = require('./utils/classSet');
+var Button = require('./Button');
 
 var Input = React.createClass({displayName: 'Input',
   propTypes: {
     type: React.PropTypes.string,
     label: React.PropTypes.renderable,
     help: React.PropTypes.renderable,
-    addonBefore: React.PropTypes.string,
-    addonAfter: React.PropTypes.string,
-    bsStyle: React.PropTypes.oneOf(['success', 'warning', 'error']),
+    addonBefore: React.PropTypes.renderable,
+    addonAfter: React.PropTypes.renderable,
+    bsStyle: function(props) {
+      if (props.type === 'submit') {
+        // Return early if `type=submit` as the `Button` component
+        // it transfers these props to has its own propType checks.
+        return;
+      }
+
+      return React.PropTypes.oneOf(['success', 'warning', 'error']).apply(null, arguments);
+    },
     hasFeedback: React.PropTypes.bool,
     groupClassName: React.PropTypes.string,
     wrapperClassName: React.PropTypes.string,
-    labelClassName: React.PropTypes.string,
+    labelClassName: React.PropTypes.string
   },
 
   getInputDOMNode: function () {
@@ -66,6 +75,11 @@ var Input = React.createClass({displayName: 'Input',
           )
         );
         break;
+      case 'submit':
+        input = this.transferPropsTo(
+          Button( {componentClass:React.DOM.input} )
+        );
+        break;
       default:
         var className = this.isCheckboxOrRadio() ? '' : 'form-control';
         input = React.DOM.input( {className:className, ref:"input", key:"input"} );
@@ -102,7 +116,7 @@ var Input = React.createClass({displayName: 'Input',
       'form-control-feedback': true,
       'glyphicon-ok': this.props.bsStyle === 'success',
       'glyphicon-warning-sign': this.props.bsStyle === 'warning',
-      'glyphicon-remove': this.props.bsStyle === 'error',
+      'glyphicon-remove': this.props.bsStyle === 'error'
     };
 
     return this.props.hasFeedback ? (
@@ -121,7 +135,7 @@ var Input = React.createClass({displayName: 'Input',
   renderCheckboxandRadioWrapper: function (children) {
     var classes = {
       'checkbox': this.props.type === 'checkbox',
-      'radio': this.props.type === 'radio',
+      'radio': this.props.type === 'radio'
     };
 
     return (
@@ -141,7 +155,7 @@ var Input = React.createClass({displayName: 'Input',
 
   renderLabel: function (children) {
     var classes = {
-      'control-label': !this.isCheckboxOrRadio(),
+      'control-label': !this.isCheckboxOrRadio()
     };
     classes[this.props.labelClassName] = this.props.labelClassName;
 
@@ -159,7 +173,7 @@ var Input = React.createClass({displayName: 'Input',
       'has-feedback': this.props.hasFeedback,
       'has-success': this.props.bsStyle === 'success',
       'has-warning': this.props.bsStyle === 'warning',
-      'has-error': this.props.bsStyle === 'error',
+      'has-error': this.props.bsStyle === 'error'
     };
     classes[this.props.groupClassName] = this.props.groupClassName;
 

@@ -1,13 +1,23 @@
 var React = require('react');
+var CustomPropTypes = require('./utils/CustomPropTypes');
 
 module.exports = {
   propTypes: {
-    container: React.PropTypes.object.isRequired
+    container: CustomPropTypes.mountable
   },
 
   getDefaultProps: function () {
     return {
-      container: typeof document !== 'undefined' ? document.body : null
+      container: {
+        // Provide `getDOMNode` fn mocking a React component API. The `document.body`
+        // reference needs to be contained within this function so that it is not accessed
+        // in environments where it would not be defined, e.g. nodejs. Equally this is needed
+        // before the body is defined where `document.body === null`, this ensures
+        // `document.body` is only accessed after componentDidMount.
+        getDOMNode: function getDOMNode() {
+          return document.body;
+        }
+      }
     };
   },
 
@@ -48,7 +58,7 @@ module.exports = {
     this._overlayInstance = null;
   },
 
-  getOverlayDOMNode: function() {
+  getOverlayDOMNode: function () {
     if (!this.isMounted()) {
       throw new Error('getOverlayDOMNode(): A component must be mounted to have a DOM node.');
     }
@@ -56,8 +66,8 @@ module.exports = {
     return this._overlayInstance.getDOMNode();
   },
 
-  getContainerDOMNode: function() {
-    return React.isValidComponent(this.props.container) ?
+  getContainerDOMNode: function () {
+    return this.props.container.getDOMNode ?
       this.props.container.getDOMNode() : this.props.container;
   }
 };

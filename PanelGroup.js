@@ -1,10 +1,10 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var classSet = require('react/lib/cx');
+var classSet = require('./utils/classSet');
+var cloneWithProps = require('./utils/cloneWithProps');
 var BootstrapMixin = require('./BootstrapMixin');
-var utils = require('./utils');
-var ValidComponentChildren = require('./ValidComponentChildren');
+var ValidComponentChildren = require('./utils/ValidComponentChildren');
 
 var PanelGroup = React.createClass({displayName: 'PanelGroup',
   mixins: [BootstrapMixin],
@@ -32,7 +32,7 @@ var PanelGroup = React.createClass({displayName: 'PanelGroup',
 
   render: function () {
     return this.transferPropsTo(
-      React.DOM.div( {className:classSet(this.getBsClassSet())}, 
+      React.DOM.div( {className:classSet(this.getBsClassSet()), onSelect:null}, 
         ValidComponentChildren.map(this.props.children, this.renderPanel)
       )
     );
@@ -54,7 +54,7 @@ var PanelGroup = React.createClass({displayName: 'PanelGroup',
       props.onSelect = this.handleSelect;
     }
 
-    return utils.cloneWithProps(
+    return cloneWithProps(
       child,
       props
     );

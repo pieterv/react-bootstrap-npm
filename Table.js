@@ -1,8 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
-var classSet = require('react/lib/cx');
-var PropTypes = require('./PropTypes');
+var classSet = require('./utils/classSet');
 
 var Table = React.createClass({displayName: 'Table',
   propTypes: {
